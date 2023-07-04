@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = GeneratorPage();
         break;
       case 1:
-        page = Placeholder();
+        page = FavoritesPage();
         break;
       default:
         throw UnimplementedError('No widget for $selectedIndex.');
@@ -70,6 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
+        floatingActionButton: null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
         body: SafeArea(
           child: Row(
             children: [
@@ -166,17 +168,64 @@ class BigCard extends StatelessWidget {
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!
         .copyWith(color: theme.colorScheme.onPrimary);
+    final text = pair.asLowerCase;
+    // final textSpan = TextSpan(
+    //   text: text,
+    //   style: style,
+    // );
+    // final textPainter = TextPainter(
+    //   text: textSpan,
+    //   textDirection: TextDirection.ltr,
+    // );
+
     return Card(
       color: theme.colorScheme.primary,
       elevation: 8.0,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Text(
-          pair.asLowerCase,
-          style: style,
-          semanticsLabel: '${pair.first} ${pair.second}',
-        ),
+        child: LayoutBuilder(builder: (context, constraints) {
+          // textPainter.layout(maxWidth: constraints.maxWidth);
+          // if (textPainter.didExceedMaxLines) {
+          //   ???
+          // }
+          return Text(
+            text,
+            style: style,
+            semanticsLabel: '${pair.first} ${pair.second}',
+          );
+        }),
       ),
+    );
+  }
+}
+
+class FavoritesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
+    if (appState.favorites.isEmpty) {
+      return Center(
+        child: Text('No favorites yet.'),
+      );
+    }
+
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Text('You have '
+              '${appState.favorites.length} favorites:'),
+        ),
+        // ...List<Widget>.from(
+        //     appState.favorites.map((e) => Text(e.asPascalCase))),
+        // for (var pair in appState.favorites) Text(pair.asPascalCase),
+        for (var pair in appState.favorites)
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text(pair.asLowerCase),
+          ),
+      ],
     );
   }
 }
