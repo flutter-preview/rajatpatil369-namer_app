@@ -50,6 +50,9 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var pair = appState.current;
+    IconData icon = appState.favorites.contains(pair)
+        ? Icons.favorite
+        : Icons.favorite_border;
 
     return Scaffold(
       body: Center(
@@ -59,12 +62,29 @@ class MyHomePage extends StatelessWidget {
             // Text('A random AWESOME idea:'),
             BigCard(pair: pair),
             SizedBox(height: 12.0),
-            ElevatedButton(
-              onPressed: () {
-                // print('button pressed!');
-                appState.getNext();
-              },
-              child: Text('Next'),
+            Row(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    // print('button pressed!');
+                    appState.toggleFavorites();
+                  },
+                  icon: Icon(icon),
+                  label: Text('Like'),
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // print('button pressed!');
+                    appState.getNext();
+                  },
+                  child: Text('Next'),
+                ),
+              ],
             ),
           ],
         ),
