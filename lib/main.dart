@@ -59,15 +59,20 @@ class MyHomePage extends StatelessWidget {
 }
 
 class BigCard extends StatelessWidget {
-    const BigCard({
-      super.key,
-      required this.pair,
-    });
+  const BigCard({
+    super.key,
+    required this.pair,
+  });
 
   final WordPair pair;
 
   @override
   Widget build(BuildContext context) {
-    return Text(pair.asLowerCase);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(pair.asLowerCase),
+      ),
+    );
   }
 }
